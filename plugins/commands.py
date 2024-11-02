@@ -62,7 +62,7 @@ async def start(client, message):
             InlineKeyboardButton('💁‍♀️ ʜᴇʟᴘ', callback_data='help'),
             InlineKeyboardButton('😊 ᴀʙᴏᴜᴛ', callback_data='about')
         ]]
-        if CLONE_MODE == True:
+        if CLONE_MODE == False:
             buttons.append([InlineKeyboardButton('🤖 ᴄʀᴇᴀᴛᴇ ʏᴏᴜʀ ᴏᴡɴ ᴄʟᴏɴᴇ ʙᴏᴛ', callback_data='clone')])
         reply_markup = InlineKeyboardMarkup(buttons)
         me2 = (await client.get_me()).mention
@@ -89,13 +89,13 @@ async def start(client, message):
         if str(message.from_user.id) != str(userid):
             return await message.reply_text(
                 text="<b>Invalid link or Expired link !</b>",
-                protect_content=True
+                protect_content=False
             )
         is_valid = await check_token(client, userid, token)
         if is_valid == True:
             await message.reply_text(
                 text=f"<b>Hey {message.from_user.mention}, You are successfully verified !\nNow you have unlimited access for all files till today midnight.</b>",
-                protect_content=True
+                protect_content=False
             )
             await verify_user(client, userid, token)
         else:
@@ -105,7 +105,7 @@ async def start(client, message):
             )
     elif data.split("-", 1)[0] == "BATCH":
         try:
-            if not await check_verification(client, message.from_user.id) and VERIFY_MODE == True:
+            if not await check_verification(client, message.from_user.id) and VERIFY_MODE == False:
                 btn = [[
                     InlineKeyboardButton("Verify", url=await get_token(client, message.from_user.id, f"https://telegram.me/{username}?start="))
                 ],[
@@ -220,7 +220,7 @@ async def start(client, message):
     files_ = await get_file_details(file_id)           
     if not files_:
         pre, file_id = ((base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))).decode("ascii")).split("_", 1)
-        if not await check_verification(client, message.from_user.id) and VERIFY_MODE == True:
+        if not await check_verification(client, message.from_user.id) and VERIFY_MODE == False:
             btn = [[
                 InlineKeyboardButton("Verify", url=await get_token(client, message.from_user.id, f"https://telegram.me/{username}?start="))
             ],[
@@ -228,7 +228,7 @@ async def start(client, message):
             ]]
             await message.reply_text(
                 text="<b>You are not verified !\nKindly verify to continue !</b>",
-                protect_content=True,
+                protect_content=False,
                 reply_markup=InlineKeyboardMarkup(btn)
             )
             return
@@ -293,7 +293,7 @@ async def start(client, message):
             f_caption=f_caption
     if f_caption is None:
         f_caption = f"{files.file_name}"
-    if not await check_verification(client, message.from_user.id) and VERIFY_MODE == True:
+    if not await check_verification(client, message.from_user.id) and VERIFY_MODE == False:
         btn = [[
             InlineKeyboardButton("Verify", url=await get_token(client, message.from_user.id, f"https://telegram.me/{username}?start="))
         ],[
@@ -301,7 +301,7 @@ async def start(client, message):
         ]]
         await message.reply_text(
             text="<b>You are not verified !\nKindly verify to continue !</b>",
-            protect_content=True,
+            protect_content=False,
             reply_markup=InlineKeyboardMarkup(btn)
         )
         return
